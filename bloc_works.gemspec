@@ -1,13 +1,13 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'bloc_works/version'
+# require 'bloc_works/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "bloc_works"
   spec.version       = BlocWorks::VERSION
-  spec.authors       = ["YOUR NAME"]
-  spec.email         = ["YOUR EMAIL"]
+  spec.authors       = ["Devon Henegar"]
+  spec.email         = ["devon.henegar@gmail.com"]
   spec.summary       = %q{Learning Web Framework}
   spec.description   = %q{Rails inspired learning Web Framework}
   spec.homepage      = "https://github.com/Bloc/bloc_works"
