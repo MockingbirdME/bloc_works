@@ -1,4 +1,6 @@
 require "bloc_works/version"
+require "bloc_works/dependencies"
+require "bloc_works/controller"
 
 module BlocWorks
 
