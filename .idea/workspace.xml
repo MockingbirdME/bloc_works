@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="03417b79-49bb-4b87-b911-033cf8976334" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/bloc_works.rb" afterPath="$PROJECT_DIR$/lib/bloc_works.rb" />
-    </list>
+    <list default="true" id="03417b79-49bb-4b87-b911-033cf8976334" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -694,12 +690,12 @@
       <option name="presentableId" value="Default" />
       <updated>1491234748399</updated>
       <workItem from="1491234750267" duration="6438000" />
-      <workItem from="1491827115681" duration="6566000" />
+      <workItem from="1491827115681" duration="6723000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13004000" />
+    <option name="totallyTimeSpent" value="13161000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="597" y="-1001" width="683" height="1001" extended-state="6" />
