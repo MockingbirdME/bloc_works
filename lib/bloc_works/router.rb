@@ -6,7 +6,7 @@ module BlocWorks
       controller = controller.capitalize
       controller = "#{controller}Controller"
 
-      [Object.const_get(controller), action]
+     {controller: Object.const_get(controller), action: action}
     end
 
     def fav_icon(env)

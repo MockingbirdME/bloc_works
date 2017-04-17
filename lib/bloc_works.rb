@@ -9,11 +9,11 @@ module BlocWorks
   class Application
     def call(env)
       controllerAndAction = self.controller_and_action(env)
-      controller = controllerAndAction[0].new(env)
-      action = controllerAndAction[1]
+      controller = controllerAndAction[:controller].new(env)
+      action = controllerAndAction[:action]
 
 
-      [200, {'Content-Type' => 'text/html'}, [controller.send(action)]]
+      [200, {'Content-Type' => 'text/html'}, [controller.public_send(action)]]
     end
   end
 
