@@ -3,11 +3,13 @@ require "bloc_works/dependencies"
 require "bloc_works/controller"
 require "bloc_works/router"
 require "bloc_works/utility"
+require "bloc_works/controller"
 
 module BlocWorks
 
   class Application
     def call(env)
+      p "bloc_works call: #{env}"
       controllerAndAction = self.controller_and_action(env)
       controller = controllerAndAction[:controller].new(env)
       action = controllerAndAction[:action]
