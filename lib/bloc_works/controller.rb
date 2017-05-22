@@ -35,12 +35,17 @@ module BlocWorks
     def response(text, status = 200, headers = {})
       raise "Cannot respond multiple times" unless @response.nil?
       @response = Rack::Response.new([text].flatten, status, headers)
-      # p 'in response'
-      # @response.body = @response.body[0]
-      # @response
     end
 
-    def render(*args)
+    def render(locals = {})
+      if @routing_params["action"].nil?
+         response(create_response_array("Welcome", locals))
+       else
+         response(create_response_array(@routing_params["action"], locals))
+       end
+    end
+
+    def redirect(*args)
       response(create_response_array(*args))
     end
 
@@ -58,13 +63,6 @@ module BlocWorks
       eruby = Erubis::Eruby.new(template)
       eruby.result(locals.merge(env: @env))
     end
-
-    # def render(view, locals = {})
-    #   filename = File.join("app", "views", controller_dir, "#{view}.html.erb")
-    #   template = File.read(filename)
-    #   eruby = Erubis::Eruby.new(template)
-    #   eruby.result(locals.merge(env: @env))
-    # end
 
     def controller_dir
       klass = self.class.to_s

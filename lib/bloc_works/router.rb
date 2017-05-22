@@ -37,6 +37,13 @@ module BlocWorks
      @rules = []
    end
 
+   def resources(resource_controller)
+     map "", "#{resource_controller}#welcome"
+     map ":controller/:id/:action"
+     map ":controller/:id", default: {"action" => "show"}
+     map ":controller", default: {"action" => "index"}
+   end
+
    def map(url, *args)
      p '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
      p "url = #{url}"

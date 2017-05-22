@@ -9,6 +9,7 @@ module BlocWorks
 
   class Application
     def call(env)
+      p "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
       p env
       # controllerAndAction = self.controller_and_action(env)
       # controller = controllerAndAction[:controller].new(env)
