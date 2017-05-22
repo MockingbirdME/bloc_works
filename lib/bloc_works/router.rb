@@ -24,7 +24,9 @@ module BlocWorks
       if @router.nil?
         raise "No routes defined"
       end
-
+      p '+++++++++++++++++==================+++++++++++++++++++'
+      p env["PATH_INFO"]
+      p @router.look_up_url(env["PATH_INFO"])
       @router.look_up_url(env["PATH_INFO"])
     end
 
@@ -36,14 +38,21 @@ module BlocWorks
    end
 
    def map(url, *args)
+     p '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+     p "url = #{url}"
+     p "args = #{args}"
      options = {}
      options = args.pop if args[-1].is_a?(Hash)
      options[:default] ||= {}
+     p "options = #{options}"
      destination = nil
      destination = args.pop if args.size > 0
+     p "destination = #{destination}"
      raise "Too many args!" if args.size > 0
      parts = url.split("/")
+     p "parts = #{parts}"
      parts.reject! { |part| part.empty? }
+     p "parts after reject = #{parts}"
 
      vars, regex_parts = [], []
 
@@ -61,28 +70,44 @@ module BlocWorks
      end
 
      regex = regex_parts.join("/")
+     p "vars = #{vars}"
+     p "regex = #{regex}"
      @rules.push({ regex: Regexp.new("^/#{regex}$"),
                    vars: vars, destination: destination,
                    options: options })
     end
 
     def look_up_url(url)
+      p '****************************************************'
+      p @rules
       @rules.each do |rule|
+        p '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
+        p rule
+        p "url = #{url}"
         rule_match = rule[:regex].match(url)
+        p rule_match
 
         if rule_match
+          p 'in rule_match'
           options = rule[:options]
           params = options[:default].dup
+          p "options #{options}"
+          p "params #{params}"
 
           rule[:vars].each_with_index do |var, index|
             params[var] = rule_match.captures[index]
           end
 
+          p "params after loop #{params}"
+
           if rule[:destination]
+            p "destination found"
             return get_destination(rule[:destination], params)
           else
             controller = params["controller"]
             action = params["action"]
+            p '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+            p "#{controller}##{action}"
             return get_destination("#{controller}##{action}", params)
           end
         end
@@ -90,7 +115,7 @@ module BlocWorks
     end
 
     def get_destination(destination, routing_params = {})
-      if destination.respont_to?(:call)
+      if destination.respond_to?(:call)
         return destination
       end
 

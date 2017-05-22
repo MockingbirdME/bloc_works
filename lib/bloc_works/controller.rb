@@ -16,6 +16,8 @@ module BlocWorks
     end
 
     def dispatch(action, routing_params = {})
+      p '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      p action
       @routing_params = routing_params
       text = self.send(action)
       if has_response?
