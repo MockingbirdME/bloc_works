@@ -44,23 +44,30 @@ module BlocWorks
      map ":controller", default: {"action" => "index"}
    end
 
-   def map(url, *args)
-     p '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-     p "url = #{url}"
-     p "args = #{args}"
-     options = {}
-     options = args.pop if args[-1].is_a?(Hash)
-     options[:default] ||= {}
-     p "options = #{options}"
-     destination = nil
-     destination = args.pop if args.size > 0
-     p "destination = #{destination}"
-     raise "Too many args!" if args.size > 0
-     parts = url.split("/")
-     p "parts = #{parts}"
-     parts.reject! { |part| part.empty? }
-     p "parts after reject = #{parts}"
+   def format_args(*args)
+     args = args[0] if args.length === 1
+     formated_args = []
+     if args[-1].is_a?(Hash)
+       formated_args.push(args.pop)
+     else
+       formated_args.push({})
+     end
+     formated_args[0][:default] ||= {}
+    #  args.size > 0 ? formated_args.push(args.pop) : formated_args.push(nil)
+     formated_args.push(args.pop) if args.size > 0
+     p formated_args
+     p formated_args[1]
+     formated_args.push(args.pop) if args.size > 0
+     formated_args
+   end
 
+   def get_parts(url)
+      parts =url.split("/")
+      parts.reject! { |part| part.empty? }
+      parts
+   end
+
+   def get_vars_and_regex(parts)
      vars, regex_parts = [], []
 
      parts.each do |part|
@@ -77,51 +84,56 @@ module BlocWorks
      end
 
      regex = regex_parts.join("/")
-     p "vars = #{vars}"
-     p "regex = #{regex}"
+     [vars, regex]
+   end
+
+   def map(url, *args)
+     p "%%%%%%%%%%%%%%%%%%%%%%%%%%% in map %%%%%%%%%%%%%%%%%%%%%%"
+     p args
+     formated_args = format_args(args)
+     raise "Too many args!" if formated_args.length > 2
+     options = formated_args[0]
+     destination = formated_args[1]
+     parts = get_parts(url)
+     var_and_regex_arr = get_vars_and_regex(parts)
+     vars = var_and_regex_arr[0]
+     regex = var_and_regex_arr[1]
+
      @rules.push({ regex: Regexp.new("^/#{regex}$"),
                    vars: vars, destination: destination,
                    options: options })
     end
 
+    def get_params(rule, rule_match, options)
+      params = options[:default].dup
+
+      rule[:vars].each_with_index do |var, index|
+        params[var] = rule_match.captures[index]
+      end
+      params
+    end
+
     def look_up_url(url)
-      p '****************************************************'
-      p @rules
       @rules.each do |rule|
-        p '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
-        p rule
-        p "url = #{url}"
         rule_match = rule[:regex].match(url)
-        p rule_match
 
         if rule_match
-          p 'in rule_match'
           options = rule[:options]
-          params = options[:default].dup
-          p "options #{options}"
-          p "params #{params}"
+          params = get_params(rule, rule_match, options)
 
-          rule[:vars].each_with_index do |var, index|
-            params[var] = rule_match.captures[index]
+          unless rule[:destination]
+            rule[:destination] = "#{params["controller"]}##{params["action"]}"
           end
 
-          p "params after loop #{params}"
+          return get_destination(rule[:destination], params)
 
-          if rule[:destination]
-            p "destination found"
-            return get_destination(rule[:destination], params)
-          else
-            controller = params["controller"]
-            action = params["action"]
-            p '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
-            p "#{controller}##{action}"
-            return get_destination("#{controller}##{action}", params)
-          end
         end
       end
     end
 
     def get_destination(destination, routing_params = {})
+      p "*********************** in get_destination **************"
+      p destination
       if destination.respond_to?(:call)
         return destination
       end
